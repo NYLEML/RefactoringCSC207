@@ -1,2 +1,3 @@
-693f712 (HEAD -> main) task 1.1 completeted CheckStyle
+232749b (HEAD -> main) Changes made to log.txt file for Task 1.2
+693f712 task 1.1 completeted CheckStyle
 8d05e36 (origin/main, origin/HEAD) Initial commit
