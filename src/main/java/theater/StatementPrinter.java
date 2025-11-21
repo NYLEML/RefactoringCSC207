@@ -39,7 +39,7 @@ public class StatementPrinter {
             final int amount = getAmount(performance);
 
             // add volume credits
-            volumeCredits = getVolumeCredits(performance, volumeCredits);
+            volumeCredits += getVolumeCredits(performance);
 
             // format and append line
             final String playName = getPlay(performance).name;
@@ -54,7 +54,7 @@ public class StatementPrinter {
         return result.toString();
     }
 
-    private int getVolumeCredits(Performance performance) {
+    private int getVolumeCredits(final Performance performance) {
         int result = Math.max(performance.audience - Constants.BASE_VOLUME_CREDIT_THRESHOLD, 0);
         if ("comedy".equals(getPlay(performance).type)) {
             result += performance.audience / Constants.COMEDY_EXTRA_VOLUME_FACTOR;
