@@ -11,8 +11,8 @@ import java.util.Map;
  * @null plays - never null
  */
 public class StatementPrinter {
-    private Invoice invoice;
-    private Map<String, Play> plays;
+    private final Invoice invoice;
+    private final Map<String, Play> plays;
 
     public StatementPrinter(Invoice invoice, Map<String, Play> plays) {
         this.invoice = invoice;
@@ -29,29 +29,33 @@ public class StatementPrinter {
     public String statement() {
         int totalAmount = 0;
         int volumeCredits = 0;
+
         final StringBuilder result =
                 new StringBuilder("Statement for " + invoice.getCustomer() + System.lineSeparator());
-
-        final NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
         for (Performance performance : invoice.getPerformances()) {
 
             final int amount = getAmount(performance);
-
-            // add volume credits
             volumeCredits += getVolumeCredits(performance);
 
-            // format and append line
             final String playName = getPlay(performance).name;
-            final String amountFormatted = frmt.format(amount / Constants.PERCENT_FACTOR);
-            result.append(String.format("  %s: %s (%s seats)%n", playName, amountFormatted, performance.audience));
+            final String amountFormatted = usd(amount);
+
+            result.append(String.format("  %s: %s (%s seats)%n",
+                    playName, amountFormatted, performance.audience));
 
             totalAmount += amount;
         }
 
-        result.append(String.format("Amount owed is %s%n", frmt.format(totalAmount / Constants.PERCENT_FACTOR)));
+        result.append(String.format("Amount owed is %s%n", usd(totalAmount)));
         result.append(String.format("You earned %s credits%n", volumeCredits));
+
         return result.toString();
+    }
+
+    private String usd(int amount) {
+        return NumberFormat.getCurrencyInstance(Locale.US)
+                .format(amount / Constants.PERCENT_FACTOR);
     }
 
     private int getVolumeCredits(final Performance performance) {
@@ -62,11 +66,11 @@ public class StatementPrinter {
         return result;
     }
 
-    private Play getPlay(Performance performance) {
+    private Play getPlay(final Performance performance) {
         return plays.get(performance.playID);
     }
 
-    private int getAmount(Performance performance) {
+    private int getAmount(final Performance performance) {
         final Play play = getPlay(performance);
         int thisAmount = 0;
 
