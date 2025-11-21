@@ -27,24 +27,19 @@ public class StatementPrinter {
      * @null return - never null
      */
     public String statement() {
-        int totalAmount = 0;
-        int volumeCredits = 0;
+
+        final int totalAmount = getTotalAmount();
+        final int volumeCredits = getTotalVolumeCredits();
 
         final StringBuilder result =
                 new StringBuilder("Statement for " + invoice.getCustomer() + System.lineSeparator());
 
         for (Performance performance : invoice.getPerformances()) {
-
-            final int amount = getAmount(performance);
-            volumeCredits += getVolumeCredits(performance);
-
             final String playName = getPlay(performance).name;
-            final String amountFormatted = usd(amount);
+            final String amountFormatted = usd(getAmount(performance));
 
             result.append(String.format("  %s: %s (%s seats)%n",
                     playName, amountFormatted, performance.audience));
-
-            totalAmount += amount;
         }
 
         result.append(String.format("Amount owed is %s%n", usd(totalAmount)));
@@ -53,9 +48,20 @@ public class StatementPrinter {
         return result.toString();
     }
 
-    private String usd(int amount) {
-        return NumberFormat.getCurrencyInstance(Locale.US)
-                .format(amount / Constants.PERCENT_FACTOR);
+    private int getTotalAmount() {
+        int result = 0;
+        for (Performance performance : invoice.getPerformances()) {
+            result += getAmount(performance);
+        }
+        return result;
+    }
+
+    private int getTotalVolumeCredits() {
+        int result = 0;
+        for (Performance performance : invoice.getPerformances()) {
+            result += getVolumeCredits(performance);
+        }
+        return result;
     }
 
     private int getVolumeCredits(final Performance performance) {
@@ -64,6 +70,11 @@ public class StatementPrinter {
             result += performance.audience / Constants.COMEDY_EXTRA_VOLUME_FACTOR;
         }
         return result;
+    }
+
+    private String usd(int amount) {
+        return NumberFormat.getCurrencyInstance(Locale.US)
+                .format(amount / Constants.PERCENT_FACTOR);
     }
 
     private Play getPlay(final Performance performance) {

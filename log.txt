@@ -1,5 +1,6 @@
-f0183ab (HEAD -> main) Extracted helper method getVolumeCredits for Task 2.2
+50c1bd0 (HEAD -> main) Replaced frmt with usd() helper method for Task 2.3
+f0183ab Extracted helper method getVolumeCredits for Task 2.2
 51dd5dd refactored for Task 2.1
 232749b Changes made to log.txt file for Task 1.2
-693f712 Task 1.1 completeted CheckStyle
+693f712 task 1.1 completeted CheckStyle
 8d05e36 (origin/main, origin/HEAD) Initial commit
